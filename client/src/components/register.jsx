@@ -25,13 +25,15 @@ const Register = () => {
       setError('Passwords do not match');
       return;
     }
-  
+
+
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post('http://localhost:3001/api/register', {
         name,
         email,
         password,
       });
+      
       setMessage(response.data.message || 'Registration successful!');
       setError('');
       setName('');
@@ -39,16 +41,22 @@ const Register = () => {
       setPassword('');
       setConfirmPassword('');
     } catch (err) {
-      console.error('Error during registration:', err); // Log full error
+      console.error('Error during registration:', err); // Log full error for debugging
+      
+      if (err.response) {
+        // Backend returned an error
+        setError(err.response.data.message || 'Registration failed!');
+      } else if (err.request) {
+        // Request was made but no response was received
+        setError('No response from the server. Please try again later.');
+      } else {
+        // Other errors (e.g., network issues, code issues)
+        setError('An error occurred. Please try again.');
+      }
+    
       setMessage('');
-      setError(
-        err.response
-          ? err.response.data.message || 'Registration failed!'
-          : 'An error occurred. Please try again.'
-      );
     }
-  };
-  
+  }    
 
   return (
     <div className="register-form-container">

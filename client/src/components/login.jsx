@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       // Make a POST request to the server with login credentials
-      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+      const response = await axios.post('http://localhost:8000/api/login', { email, password });
       
       // Handle successful login
       setMessage(response.data.message);
