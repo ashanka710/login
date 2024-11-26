@@ -64,22 +64,18 @@
 //     console.log(`Server running on http://localhost:${8000}`);
 // });
 
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Initialize environment variables
 dotenv.config();
 
-// Create an Express app
 const app = express();
 
 // Middleware
 app.use(express.json()); // Parse JSON request bodies
-app.use(cors({ origin: '*' })); // Enable Cross-Origin Resource Sharing
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://ashankaidevify:idevify%40gmail.com@cluster0.ijmsuse.mongodb.net/DK';
@@ -87,19 +83,17 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
-// User Schema
+// User Schema and Routes
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-}, { timestamps: true });
+});
 
 const User = mongoose.model('User', userSchema);
 
-// Routes
-app.post('/api/register', async(req, res) => {
+app.post('/register', async(req, res) => {
     const { name, email, password } = req.body;
-
     if (!name || !email || !password) {
         return res.status(400).json({ message: 'All fields are required' });
     }
@@ -121,16 +115,16 @@ app.post('/api/register', async(req, res) => {
 });
 
 // Serve React static files
-const buildpath = path.join(__dirname, '..', 'client', 'build'); // Correct path
-app.use(express.static(buildpath));
+const buildPath = path.join(__dirname, 'client/build');
+app.use(express.static(buildPath));
 
-// React routing
+// Catch-all route to serve React frontend for any unknown requests
 app.get('*', (req, res) => {
-    res.sendFile(path.join(buildpath, 'index.html'));
+    res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 // Start the server
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
