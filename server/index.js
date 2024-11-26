@@ -63,7 +63,6 @@
 // app.listen(PORT, () => {
 //     console.log(`Server running on http://localhost:${8000}`);
 // });
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -76,6 +75,11 @@ const app = express();
 
 // Middleware
 app.use(express.json()); // Parse JSON request bodies
+app.use(
+    cors({
+        origin: '*', // Allow requests from any origin
+    })
+);
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://ashankaidevify:idevify%40gmail.com@cluster0.ijmsuse.mongodb.net/DK';
@@ -115,7 +119,7 @@ app.post('/register', async(req, res) => {
 });
 
 // Serve React static files
-const buildPath = path.join(__dirname, 'client/build');
+const buildPath = path.join(__dirname, '../client/build');
 app.use(express.static(buildPath));
 
 // Catch-all route to serve React frontend for any unknown requests
