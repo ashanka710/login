@@ -123,9 +123,7 @@ const buildPath = path.join(__dirname, '../client/build');
 app.use(express.static(buildPath));
 
 // Catch-all route to serve React frontend for any unknown requests
-app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
-});
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
